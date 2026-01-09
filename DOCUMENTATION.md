@@ -1115,15 +1115,11 @@ The format string supports the following format chars:
 | `%O` | `Guid` (including short GUIDs*) |
 | `%u` | `uint64` (formatted as a short ID*) |
 
-**Named parameters**: When using ASP.NET Core’s [Endpoint Routing](#endpoint-routing) with Giraffe, you can use `%<type>:<name>` to assign a name to a route parameter, which is especially useful for OpenAPI/Swagger documentation and for clarity. 
+**Named parameters**: When using ASP.NET Core’s [Endpoint Routing](#endpoint-routing) with Giraffe, you can use `%<type>:<name>` (e.g., `%i:petId`) to assign a name to a route parameter, which is especially useful for OpenAPI/Swagger documentation and for clarity. 
 
-For example, the route:
+For example, the route `routef "/pet/%i:petId"` will match `/pet/42` and bind `42` to `petId`. 
 
-`routef "/pet/%i:petId"` 
-
-will match `/pet/42` and bind `42` to `petId`. 
-
-> If you'd like to see an example, check the sample at the [official repository](https://github.com/giraffe-fsharp/Giraffe) under the path *samples/EndpointRoutingApp/Program.fs*
+If you'd like to see an example, check the [EndpointRoutingApp sample](https://github.com/giraffe-fsharp/Giraffe/blob/master/samples/EndpointRoutingApp/Program.fs) at the official repository.
 
 *) Please note that the `%O` and `%u` format characters also support URL friendly short GUIDs and IDs.
 
