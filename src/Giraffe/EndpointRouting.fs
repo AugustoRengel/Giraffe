@@ -287,11 +287,11 @@ module Routers =
                 let routeData =
                     ctx.GetRouteData().Values
                     |> Seq.map (fun kvp -> KeyValuePair(kvp.Key, StringValues(kvp.Value :?> string)))
-                    |> fun kvps -> Dictionary<string, StringValues>(kvps) :> IDictionary<string, StringValues>
+                    |> Dictionary<string, StringValues>
 
                 match ModelParser.tryParse<'T> None routeData with
                 | Ok model -> handler model next ctx
-                | Error _ -> RequestErrors.BAD_REQUEST "Failed to bind route parameters" next ctx
+                | Error _ -> skipPipeline
 
         let newHandler = (bindRouteHandler routeHandler)
 

@@ -265,6 +265,9 @@ type Person = { Name: Name; Age: int }
 [<InlineData("/p/John/Doe/32", HttpStatusCode.OK, "Name.First: John, Name.Last: Doe, Age: 32")>]
 [<InlineData("/p/John%20Paul/Doe/32", HttpStatusCode.OK, "Name.First: John Paul, Name.Last: Doe, Age: 32")>]
 [<InlineData("/p/John%20Paul/Doe/32/", HttpStatusCode.OK, "Name.First: John Paul, Name.Last: Doe, Age: 32")>]
+[<InlineData("/p/John/Doe/9111222333", HttpStatusCode.UnprocessableEntity, "")>]
+[<InlineData("/p/John/Doe/not-a-number", HttpStatusCode.UnprocessableEntity, "")>]
+[<InlineData("/p/John/Doe//", HttpStatusCode.NotFound, "Not Found")>]
 let ``routebind: GET "/p/{Name.First}/{Name.Last}/{Age}" returns person object``
     (path: string, expectedStatus: HttpStatusCode, expectedContent: string)
     =
@@ -272,10 +275,17 @@ let ``routebind: GET "/p/{Name.First}/{Name.Last}/{Age}" returns person object``
         let endpoints: Endpoint list =
             [
                 GET [
-                    routeBind<Person>
+                    routeBindWithExtensions<Person>
+                        (fun eb -> eb.WithOrder 1)
                         "/p/{Name.First}/{Name.Last}/{Age}"
                         (fun (person: Person) ->
                             text ($"Name.First: {person.Name.First}, Name.Last: {person.Name.Last}, Age: {person.Age}")
+                        )
+                    routefWithExtensions
+                        (fun eb -> eb.WithOrder 2)
+                        "/p/%s:firstName/%s:lastName/%d:age" 
+                        (fun (firstName: string, lastName: string, age: int64) ->
+                            text ($"firstName: {firstName}, lastName: {lastName}, age: {age}")
                         )
                 ]
             ]
