@@ -283,7 +283,7 @@ let ``routebind: GET "/p/{Name.First}/{Name.Last}/{Age}" returns person object``
                         )
                     routefWithExtensions
                         (fun eb -> eb.WithOrder 2)
-                        "/p/%s:firstName/%s:lastName/%d:age" 
+                        "/p/%s:firstName/%s:lastName/%d:age"
                         (fun (firstName: string, lastName: string, age: int64) ->
                             text ($"firstName: {firstName}, lastName: {lastName}, age: {age}")
                         )
